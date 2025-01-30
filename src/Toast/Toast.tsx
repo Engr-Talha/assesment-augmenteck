@@ -1,20 +1,27 @@
-// src/components/Toast/Toast.tsx
-import React from 'react';
 import styled from '@emotion/styled';
+import React, { useEffect } from 'react';
 
-const ToastContainer = styled.div<{ type: 'success' | 'error' | 'warning'}>`
+interface ToastProps {
+  message: string;
+  type: 'success' | 'error' | 'warning';
+  onClose: () => void;
+}
+
+const ToastContainer = styled.div<{ type: string }>`
   position: fixed;
-  top: 1rem;
-  right: 1rem;
-  padding: 1rem 1.5rem;
-  border-radius: 4px;
-  background-color: ${({ type }) => 
-    type === 'success' ? '#10B981' : 
-    type === 'error' ? '#EF4444' : 
-    '#F59E0B'
-  };
+  top: 24px;
+  right: 24px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  background: ${({ type }) => 
+    type === 'success' ? '#0E9F6E' :
+    type === 'error' ? '#F05252' :
+    '#F6AD55'};
   color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
   z-index: 1000;
   animation: slideIn 0.3s ease-out;
 
@@ -30,21 +37,35 @@ const ToastContainer = styled.div<{ type: 'success' | 'error' | 'warning'}>`
   }
 `;
 
-interface ToastProps {
-  message: string;
-  type: 'success' | 'error' | 'warning';
-  onClose: () => void;
-}
+const ToastIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ToastMessage = styled.p`
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+`;
 
 export const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
-  React.useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 3000);
+
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
     <ToastContainer type={type}>
-      {message}
+      <ToastIcon>
+        {type === 'success' && '✓'}
+        {type === 'error' && '✕'}
+        {type === 'warning' && '⚠'}
+      </ToastIcon>
+      <ToastMessage>{message}</ToastMessage>
     </ToastContainer>
   );
 };

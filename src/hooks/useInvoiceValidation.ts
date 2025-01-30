@@ -1,54 +1,76 @@
-// src/hooks/useInvoiceValidation.ts
 import { useForm } from 'react-hook-form';
-import { InvoiceFormData, InvoiceTermsEnum } from '../types/invoice';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { InvoiceFormData, InvoiceTermsEnum, BillFrom, BillTo, InvoiceItem } from '../types/invoice';
+
+// Define typed schema
+const schema: yup.ObjectSchema<InvoiceFormData> = yup.object({
+  billFrom: yup.object({
+    companyName: yup.string().required('Company name is required'),
+    companyEmail: yup.string().email('Invalid email').required('Email is required'),
+    streetAddress: yup.string().required('Street address is required'),
+    city: yup.string().required('City is required'),
+    postalCode: yup.string().required('Postal code is required'),
+    country: yup.string().required('Country is required')
+  }) as yup.ObjectSchema<BillFrom>,
+
+  billTo: yup.object({
+    clientName: yup.string().required('Client name is required'),
+    clientEmail: yup.string().email('Invalid email').required('Email is required'),
+    streetAddress: yup.string().required('Street address is required'),
+    city: yup.string().required('City is required'),
+    postalCode: yup.string().required('Postal code is required'),
+    country: yup.string().required('Country is required')
+  }) as yup.ObjectSchema<BillTo>,
+
+  invoiceDate: yup.string().required('Invoice date is required'),
+  
+  paymentTerms: yup.mixed<InvoiceTermsEnum>()
+    .oneOf(Object.values(InvoiceTermsEnum))
+    .required('Payment terms are required'),
+  
+  projectDescription: yup.string().required('Project description is required'),
+  
+  items: yup.array().of(
+    yup.object({
+      itemName: yup.string().required('Item name is required'),
+      quantity: yup.number().required('Quantity is required').min(1, 'Quantity must be positive'),
+      price: yup.number().required('Price is required').min(0, 'Price must be positive'),
+      total: yup.number().required()
+    }) as yup.ObjectSchema<InvoiceItem>
+  ).required().min(1, 'At least one item is required')
+}) as yup.ObjectSchema<InvoiceFormData>;
 
 export const useInvoiceValidation = () => {
   return useForm<InvoiceFormData>({
     defaultValues: {
+      billFrom: {
+        companyName: '',
+        companyEmail: '',
+        streetAddress: '',
+        city: '',
+        postalCode: '',
+        country: ''
+      },
+      billTo: {
+        clientName: '',
+        clientEmail: '',
+        streetAddress: '',
+        city: '',
+        postalCode: '',
+        country: ''
+      },
       invoiceDate: new Date().toISOString().split('T')[0],
-      paymentTerms: InvoiceTermsEnum.NET_30_DAYS, // Use the enum value directly
-      items: [{ itemName: '', quantity: 0, price: 0, total: 0 }]
+      paymentTerms: InvoiceTermsEnum.NET_30_DAYS,
+      projectDescription: '',
+      items: [{ 
+        itemName: '', 
+        quantity: 0, 
+        price: 0, 
+        total: 0 
+      }]
     },
-    mode: 'onBlur',
-    resolver: (values) => {
-      const errors: any = {};
-      
-      // Validate Bill From
-      if (!values.billFrom?.companyName?.trim()) {
-        errors.billFrom = { ...errors.billFrom, companyName: 'Company name is required' };
-      }
-      if (!values.billFrom?.companyEmail?.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
-        errors.billFrom = { ...errors.billFrom, companyEmail: 'Valid email is required' };
-      }
-
-      // Validate Bill To
-      if (!values.billTo?.clientName?.trim()) {
-        errors.billTo = { ...errors.billTo, clientName: 'Client name is required' };
-      }
-      if (!values.billTo?.clientEmail?.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
-        errors.billTo = { ...errors.billTo, clientEmail: 'Valid email is required' };
-      }
-
-      // Validate Items
-      if (!values.items?.length) {
-        errors.items = 'At least one item is required';
-      } else {
-        const itemsErrors = values.items.map(item => {
-          const itemError: any = {};
-          if (!item.itemName?.trim()) itemError.itemName = 'Item name is required';
-          if (item.quantity <= 0) itemError.quantity = 'Quantity must be greater than 0';
-          if (item.price <= 0) itemError.price = 'Price must be greater than 0';
-          return Object.keys(itemError).length ? itemError : undefined;
-        });
-        if (itemsErrors.some(error => error)) {
-          errors.items = itemsErrors;
-        }
-      }
-
-      return {
-        values,
-        errors: Object.keys(errors).length ? errors : null
-      };
-    }
-  });
+    resolver: yupResolver<InvoiceFormData>(schema),
+    mode: 'onChange', // Change this from 'onBlur' to 'onChange'
+    reValidateMode: 'onChange'  });
 };

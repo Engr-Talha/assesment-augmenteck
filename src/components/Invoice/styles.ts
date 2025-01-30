@@ -8,6 +8,7 @@ export const FormContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
+    align-items: start;
   
   @media (max-width: 1200px) {
     grid-template-columns: 1fr;
@@ -28,7 +29,9 @@ export const Form = styled.form`
   background: #FFFFFF;
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    padding: 1rem;
+    width: 100%;
+    margin: 0;
   }
 `;
 export const FormHeader = styled.div`
@@ -62,11 +65,6 @@ export const InputGrid = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
 
 
 
@@ -76,7 +74,7 @@ export const Select = styled.select`
   width: 100%;
   padding: 1rem;
   border: 1px solid ${theme.colors.grayLight};
-  border-radius: ${theme.borderRadius.small};
+  border-radius: ${theme.borderRadius.medium};
   font-size: 0.875rem;
   background-color: ${theme.colors.white};
   cursor: pointer;
@@ -103,8 +101,7 @@ export const Select = styled.select`
 
 
 
-
-export  const Button = styled.button<{ variant: 'primary' | 'secondary' }>`
+export const Button = styled.button<{ variant: 'primary' | 'secondary' }>`
   height: 48px;
   padding: 0 24px;
   border-radius: 8px;
@@ -129,6 +126,17 @@ export  const Button = styled.button<{ variant: 'primary' | 'secondary' }>`
       background: #DFE3FA;
     }
   `}
+
+  @media (max-width: 768px) {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    flex: 1;
+    padding: 0 12px;
+  }
 `;
 
 export const Label = styled.label`
@@ -146,7 +154,7 @@ export const Input = styled.input`
   height: 48px;
   padding: ${theme.spacing.input.padding};
   border: 1px solid ${theme.colors.grayLight};
-  border-radius: ${theme.borderRadius.small};
+  border-radius: ${theme.borderRadius.medium};
   font-size: 0.875rem;
   line-height: 1.5;
   color: ${theme.colors.darkBlue};
@@ -170,18 +178,30 @@ export const FormSection = styled.section`
 
   h2 {
     font-family: 'Inter', sans-serif;
-    font-size: 24px;
+    font-size: 15px;
     font-weight: 600;
     line-height: 38px;
     color: #101828;
     margin-bottom: 5px;
   }
 `;
+export const ItemsListTitle = styled.h2`
+  margin-bottom: 15px;
+
+ 
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 38px;
+    color: #101828;
+    margin-bottom: 5px;
+  
+`;
 
 
 export const PreviewTitle = styled.h2`
   font-family: 'Inter', sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 38px;
   color: #101828;
@@ -189,7 +209,7 @@ export const PreviewTitle = styled.h2`
 `;
 
 
-export  const Header = styled.div`
+export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -197,9 +217,17 @@ export  const Header = styled.div`
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 16px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 `;
 
-export  const HeaderLeft = styled.div`
+
+export const HeaderLeft = styled.div`
   h1 {
     font-size: 24px;
     font-weight: 700;
@@ -211,11 +239,29 @@ export  const HeaderLeft = styled.div`
     font-size: 14px;
     color: #888EB0;
   }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+    
+    p {
+      font-size: 13px;
+    }
+  }
 `;
 
-export  const HeaderButtons = styled.div`
+
+export const HeaderButtons = styled.div`
   display: flex;
   gap: 8px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 8px;
+    justify-content: flex-end;
+  }
 `;
 
 export const PageContainer = styled.div`
@@ -225,11 +271,12 @@ export const PageContainer = styled.div`
 
   @media (max-width: 768px) {
     padding: 0 1rem;
+    overflow: hidden; // This prevents horizontal scrolling
   }
 `;
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: minmax(600px, 1fr) 420px;
+  grid-template-columns: minmax(600px, 1fr) 500px;
   gap: 40px;
   align-items: start;
 
@@ -241,6 +288,9 @@ export const ContentGrid = styled.div`
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 24px;
+    width: 100%;
+    padding: 0;
   }
 `;
 
@@ -317,4 +367,30 @@ align-self: center; // This ensures vertical centering
       height: 16px;
     }
   `;
+  export const ErrorMessage = styled.span`
+  color: #ec5757;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+`;
+
+// Update InputGroup to handle error states
+export const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   
+  .error {
+    color: #ec5757;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  input, select {
+    border-color: ${props => props.onError ? '#ec5757' : '#dfe3fa'};
+    
+    &:focus {
+      border-color: ${props => props.onError ? '#ec5757' : '#7c5dfa'};
+    }
+  }
+`;

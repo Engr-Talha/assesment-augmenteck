@@ -2,130 +2,168 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { theme } from '../../styles/theme';
 import { InvoiceFormData, InvoiceItem } from '../../types/invoice';
+import { border } from '@chakra-ui/react';
 interface PreviewProps {
     data: InvoiceFormData;
 }
+const PreviewWrapper = styled.div`
+  background: #F8F8FB;
+  padding: 30px;
+  border-radius: 16px;
+  height: fit-content;
+  position: relative;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin: 0;
+    width: 100%;
+  }
+`;
 
 const PreviewContainer = styled.div`
-  background: ${theme.colors.white};
-  padding: 32px;
-  border-radius: ${theme.borderRadius.medium};
-  box-shadow: ${theme.shadows.main};
+  background: white;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
   position: sticky;
-  top: 32px;
-`;
+  top: 24px;
+  max-width: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 48px);
+  box-sizing: border-box;
 
-const PreviewHeader = styled.div`
-  margin-bottom: 32px;
-`;
-
-const PreviewTitle = styled.h2`
-  color: ${theme.colors.darkBlue};
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 24px;
+  @media (max-width: 768px) {
+    padding: 16px;
+    position: static;
+    max-height: none;
+  }
 `;
 
 const InfoGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  margin-bottom: 32px;
+  margin: 15px 0;
 `;
 
 const InfoItem = styled.div`
-  margin-bottom: 8px;
-`;
-
-const InfoLabel = styled.div`
-font-family: Inter;
-font-size: 16px;
-font-weight: 400;
-line-height: 38px;
-text-align: left;
-text-underline-position: from-font;
-text-decoration-skip-ink: none;
-color: #76787D;
-
-
-`;
-
-const InfoValue = styled.div`
-font-family: Inter;
-font-size: 16px;
-font-weight: 500;
-line-height: 38px;
-text-align: left;
-text-underline-position: from-font;
-text-decoration-skip-ink: none;
-
+  margin-bottom: 16px;
 `;
 
 const ItemsTable = styled.div`
-  margin-top: 32px;
+  margin-top: 30px;
   border-radius: ${theme.borderRadius.small};
+  background: #F8F8FB;
+  overflow: hidden;
 `;
 
 const TableHeader = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 16px;
-  padding: 16px 32px;
-  color: ${theme.colors.grayText};
-  font-size: 12px;
-  background: ${theme.colors.lightBg};
+  gap: 20px;
+  padding: 12px 24px;
+  background: #F8F8FB;
+  color: #7E88C3;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid #EAECF0;
 `;
 
 const TableBody = styled.div`
-  padding: 32px;
-
-  border-bottom: 1px solid ${theme.colors.grayLight};
+  padding: 24px;
+  background: white;
 `;
 
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 16px;
-  padding: 8px 0;
+  gap: 20px;
+  padding: 12px 0;
   color: ${theme.colors.darkBlue};
   font-size: 14px;
+  word-wrap: break-word;
+  
+  & > div {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
 
   &:not(:last-child) {
-    margin-bottom: 8px;
+    border-bottom: 1px solid #EAECF0;
   }
 `;
 
 const TotalSection = styled.div`
-  padding: 32px;
+  padding: 20px 24px;
   background: white;
+  border-top: 1px solid #EAECF0;
 `;
 
 const TotalInfo = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
+  gap: 12px;
+  margin-left: auto;
+  width: 100%;
+  max-width: 280px;
 `;
 
 const TotalRow = styled.div`
   display: grid;
-  grid-template-columns: 100px 100px;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   align-items: center;
 `;
 
+const InfoLabel = styled.div`
+  color: #76787D;
+  font-size: 13px;
+  line-height: 18px;
+  margin-bottom: 6px;
+  font-weight: 500;
+`;
+
+const InfoValue = styled.div`
+  color: #0C0E16;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+`;
+
+const PreviewTitle = styled.h2`
+  color: #0C0E16;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 30px;
+  margin-bottom: 24px;
+`;
+
+const Headingto = styled.h2`
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 12px;
+`;
+
+const HorizontalRule = styled.hr`
+  border: none;
+  border-top: 1px solid #EAECF0;
+`;
+
 const TotalLabel = styled.div`
-  color: ${theme.colors.grayText};
-  font-size: 14px;
-  text-align: left;
+  color: black;
+  font-size: 13px;
+  text-align:right
 `;
 
 const TotalValue = styled.div`
-  color: ${theme.colors.darkBlue};
+  color: black;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700;
   text-align: right;
 `;
+
 
 export const InvoicePreview: React.FC<PreviewProps> = ({ data }) => {
 
@@ -146,10 +184,15 @@ export const InvoicePreview: React.FC<PreviewProps> = ({ data }) => {
         return <div>Loading preview...</div>;
     }
     return (
+      <PreviewWrapper>
+
+
+                <PreviewTitle>Preview</PreviewTitle>
+
         <PreviewContainer>
-            <PreviewHeader>
-                <PreviewTitle>New Invoice</PreviewTitle>
-            </PreviewHeader>
+                <Headingto>New Invoice</Headingto>
+                <HorizontalRule />
+
 
             <InfoGrid>
                 <InfoItem>
@@ -204,6 +247,7 @@ export const InvoicePreview: React.FC<PreviewProps> = ({ data }) => {
                         </TableRow>
                     ))}
                 </TableBody>
+                <HorizontalRule />
 
                 <TotalSection>
                     <TotalInfo>
@@ -225,5 +269,7 @@ export const InvoicePreview: React.FC<PreviewProps> = ({ data }) => {
 
             </ItemsTable>
         </PreviewContainer>
+
+        </PreviewWrapper>
     );
 };
