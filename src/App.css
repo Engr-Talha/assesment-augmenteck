@@ -1,0 +1,18 @@
+/* App.css */
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  padding: 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F8F8FB;
+}
